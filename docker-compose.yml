@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${BANCO_NOME}
+      MYSQL_USER: ${BANCO_USUARIO}
+      MYSQL_PASSWORD: ${BANCO_SENHA}
+      MYSQL_ROOT_PASSWORD: ${BANCO_RAIZ_SENHA}
+    volumes:
+      - dados_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${BANCO_RAIZ_SENHA}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      AMBIENTE: ${AMBIENTE}
+      DEBUG: ${DEBUG}
+      NIVEL_LOG: ${NIVEL_LOG}
+      URL_PUBLICA_API: ${URL_PUBLICA_API}
+      ORIGENS_PERMITIDAS: ${ORIGENS_PERMITIDAS}
+      BANCO_HOST: mysql
+      BANCO_PORTA: 3306
+      BANCO_NOME: ${BANCO_NOME}
+      BANCO_USUARIO: ${BANCO_USUARIO}
+      BANCO_SENHA: ${BANCO_SENHA}
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_URL_API: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  dados_mysql:
