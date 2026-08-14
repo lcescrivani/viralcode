@@ -13,8 +13,8 @@ O ViralCode é uma aplicação para descobrir, analisar e transformar dados de c
 
 1. Copie `.env.exemplo` para `.env` e substitua as senhas de exemplo por valores locais seguros.
 2. Execute `docker compose up --build`.
-3. Acesse o frontend em `http://localhost:5173` e a API em `http://localhost:8000`.
-4. Verifique a API em `http://localhost:8000/api/v1/saude`.
+3. Acesse o frontend em `http://localhost:5173` e a API em `http://localhost:9000`.
+4. Verifique a API em `http://localhost:9000/api/v1/saude`.
 
 ## Validação
 
